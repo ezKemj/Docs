@@ -1,0 +1,15 @@
+/* 中文字体优化 */
+:root {
+  --md-text-font: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --md-code-font: "Fira Code", "Source Code Pro", monospace;
+}
+
+/* 中文行高优化 */
+.md-typeset {
+  line-height: 1.8;
+}
+
+/* 代码块中文优化 */
+.md-typeset code {
+  font-size: 0.85em;
+}
