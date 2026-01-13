@@ -1,3 +1,463 @@
-site_name: My Docs
+# ==============================================================================
+# 站点基本信息
+# ==============================================================================
+site_name: 我的文档网站
+site_description: 使用 MkDocs Material 构建的中文知识库
+site_author: 作者名
+site_url: https://example.com
+repo_url: https://github.com/yourname/yourrepo
+repo_name: yourname/yourrepo
+edit_uri: edit/main/docs/
+copyright: Copyright &copy; 2024 作者名
+
+# ==============================================================================
+# 构建配置
+# ==============================================================================
+docs_dir: docs
+site_dir: site
+strict: false
+dev_addr: 127.0.0.1:8000
+use_directory_urls: true
+
+# ==============================================================================
+# 主题配置
+# ==============================================================================
 theme:
   name: material
+  language: zh
+  custom_dir: overrides  # 自定义覆盖目录（可选）
+  
+  # 字体配置（中文建议使用系统字体）
+  font:
+    text: Noto Sans SC  # 思源黑体
+    code: Fira Code
+  # 或者禁用 Google Fonts，使用系统字体（推荐中文用户）
+  # font: false
+  
+  # 图标配置
+  icon:
+    logo: material/book-open-page-variant
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+    admonition:
+      note: octicons/tag-16
+      abstract: octicons/checklist-16
+      info: octicons/info-16
+      tip: octicons/squirrel-16
+      success: octicons/check-16
+      question: octicons/question-16
+      warning: octicons/alert-16
+      failure: octicons/x-circle-16
+      danger: octicons/zap-16
+      bug: octicons/bug-16
+      example: octicons/beaker-16
+      quote: octicons/quote-16
+  
+  # 网站图标
+  favicon: assets/favicon.png
+  logo: assets/logo.png
+  
+  # 功能开关
+  features:
+    # --------------------------------------------------------------------------
+    # 导航功能
+    # --------------------------------------------------------------------------
+    - navigation.instant          # 即时加载（SPA 体验）
+    - navigation.instant.prefetch # 预加载（鼠标悬停时）
+    - navigation.instant.progress # 加载进度条
+    - navigation.tracking         # URL 锚点跟踪
+    - navigation.tabs             # 顶部标签导航
+    - navigation.tabs.sticky      # 标签栏固定
+    - navigation.sections         # 侧边栏分组显示
+    - navigation.expand           # 侧边栏默认展开
+    - navigation.prune            # 只渲染可见导航项（优化性能）
+    - navigation.indexes          # 章节索引页
+    - navigation.top              # 返回顶部按钮
+    - navigation.footer           # 页脚上下页导航
+    - navigation.path             # 面包屑导航（需要 Insiders）
+    
+    # --------------------------------------------------------------------------
+    # 目录功能
+    # --------------------------------------------------------------------------
+    - toc.follow                  # 目录跟随滚动高亮
+    - toc.integrate               # 目录整合到左侧导航
+    
+    # --------------------------------------------------------------------------
+    # 搜索功能
+    # --------------------------------------------------------------------------
+    - search.suggest              # 搜索建议
+    - search.highlight            # 搜索结果高亮
+    - search.share                # 搜索结果分享链接
+    
+    # --------------------------------------------------------------------------
+    # 页头功能
+    # --------------------------------------------------------------------------
+    - header.autohide             # 向下滚动时隐藏页头
+    - announce.dismiss            # 公告栏可关闭
+    
+    # --------------------------------------------------------------------------
+    # 内容功能
+    # --------------------------------------------------------------------------
+    - content.code.copy           # 代码复制按钮
+    - content.code.select         # 代码选择按钮
+    - content.code.annotate       # 代码注释
+    - content.action.edit         # 编辑此页按钮
+    - content.action.view         # 查看源码按钮
+    - content.tabs.link           # 内容标签页联动
+    - content.tooltips            # 工具提示增强
+    - content.footnote.tooltips   # 脚注工具提示
+  
+  # 调色板配置（支持浅色/深色切换）
+  palette:
+    # 浅色模式
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: 切换到深色模式
+    # 深色模式
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: 切换到浅色模式
+
+# ==============================================================================
+# 导航结构
+# ==============================================================================
+nav:
+  - 首页: index.md
+  - 快速开始:
+      - quickstart/index.md  # 章节索引页（需启用 navigation.indexes）
+      - 安装: quickstart/install.md
+      - 配置: quickstart/config.md
+  - 教程:
+      - 基础教程: tutorial/basic.md
+      - 进阶教程: tutorial/advanced.md
+  - 参考:
+      - API 文档: reference/api.md
+      - 常见问题: reference/faq.md
+  - 博客:
+      - blog/index.md
+  - 关于: about.md
+
+# ==============================================================================
+# 插件配置（仅使用内置插件）
+# ==============================================================================
+plugins:
+  # 搜索插件
+  - search:
+      lang: 
+        - zh
+        - en
+      separator: '[\s\u200b\-]'  # 中文分词优化
+      pipeline:
+        - stemmer
+        - stopWordFilter
+        - trimmer
+  
+  # 标签插件
+  - tags:
+      enabled: true
+      tags_file: tags.md
+      tags_slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+      tags_slugify_separator: "-"
+      tags_compare: !!python/name:material.plugins.tags.plugin.casefold
+      tags_compare_reverse: false
+      tags_pages_compare: !!python/name:material.plugins.tags.plugin.page_title
+      tags_pages_compare_reverse: false
+      tags_allowed:
+        - 教程
+        - 指南
+        - 参考
+        - 示例
+  
+  # 博客插件
+  - blog:
+      enabled: true
+      blog_dir: blog
+      blog_toc: true
+      post_dir: "{blog}/posts"
+      post_date_format: long
+      post_url_date_format: yyyy/MM/dd
+      post_url_format: "{date}/{slug}"
+      post_url_max_categories: 1
+      post_slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+      post_slugify_separator: "-"
+      post_excerpt: optional
+      post_excerpt_max_authors: 1
+      post_excerpt_max_categories: 5
+      post_excerpt_separator: <!-- more -->
+      post_readtime: true
+      post_readtime_words_per_minute: 265
+      archive: true
+      archive_name: 归档
+      archive_date_format: yyyy
+      archive_url_date_format: yyyy
+      archive_url_format: "archive/{date}"
+      archive_toc: false
+      categories: true
+      categories_name: 分类
+      categories_url_format: "category/{slug}"
+      categories_slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+      categories_slugify_separator: "-"
+      categories_toc: false
+      categories_allowed:
+        - 技术
+        - 生活
+        - 教程
+      authors: true
+      authors_file: "{blog}/.authors.yml"
+      pagination: true
+      pagination_per_page: 10
+      pagination_url_format: "page/{page}"
+      pagination_format: "~2~"
+      pagination_if_single_page: false
+      pagination_keep_content: false
+      draft: false
+      draft_on_serve: true
+      draft_if_future_date: false
+  
+  # 离线支持插件
+  - offline:
+      enabled: false
+  
+  # 隐私插件（自动下载外部资源）
+  - privacy:
+      enabled: true
+      assets: true
+      assets_fetch: true
+      assets_fetch_dir: assets/external
+      links: true
+      links_attr_map:
+        target: _blank
+      links_noopener: true
+  
+  # 社交卡片插件
+  - social:
+      enabled: true
+      cards: true
+      cards_dir: assets/images/social
+      cards_layout_options:
+        background_color: "#4051b5"
+        color: "#ffffff"
+  
+  # 项目插件（多项目支持）
+  # - projects:
+  #     enabled: true
+  #     projects_dir: projects
+  
+  # 组插件（组合多个插件配置）
+  # - group:
+  #     enabled: true
+  #     plugins:
+  #       - optimize
+  #       - minify
+
+# ==============================================================================
+# Markdown 扩展配置
+# ==============================================================================
+markdown_extensions:
+  # --------------------------------------------------------------------------
+  # Python Markdown 官方扩展
+  # --------------------------------------------------------------------------
+  - abbr                          # 缩写
+  - admonition                    # 警告框
+  - attr_list                     # 属性列表
+  - def_list                      # 定义列表
+  - footnotes                     # 脚注
+  - md_in_html                    # HTML 中使用 Markdown
+  - tables                        # 表格
+  - toc:                          # 目录
+      permalink: true
+      permalink_title: 点击复制链接
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+      toc_depth: 3
+      title: 目录
+  - sane_lists                    # 合理列表处理
+  - smarty:                       # 智能标点
+      smart_quotes: false         # 中文建议关闭
+  - wikilinks                     # Wiki 链接
+  
+  # --------------------------------------------------------------------------
+  # PyMdown Extensions
+  # --------------------------------------------------------------------------
+  - pymdownx.arithmatex:          # 数学公式
+      generic: true
+  - pymdownx.betterem:            # 更好的强调
+      smart_enable: all
+  - pymdownx.caret                # 上标和插入标记
+  - pymdownx.mark                 # 高亮标记
+  - pymdownx.tilde                # 下标和删除线
+  - pymdownx.critic               # 批注标记
+  - pymdownx.details              # 可折叠详情
+  - pymdownx.emoji:               # Emoji 表情
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:           # 代码高亮
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+      auto_title: true
+      linenums: false
+      linenums_style: pymdownx-inline
+  - pymdownx.inlinehilite         # 行内代码高亮
+  - pymdownx.keys                 # 键盘按键
+  - pymdownx.magiclink:           # 自动链接
+      repo_url_shorthand: true
+      user: yourname
+      repo: yourrepo
+  - pymdownx.smartsymbols         # 智能符号
+  - pymdownx.snippets:            # 代码片段
+      check_paths: true
+      base_path:
+        - docs
+      auto_append:
+        - includes/abbreviations.md
+  - pymdownx.superfences:         # 超级围栏
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:              # 内容标签页
+      alternate_style: true
+      combine_header_slug: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.tasklist:            # 任务列表
+      custom_checkbox: true
+      clickable_checkbox: false
+  - pymdownx.blocks.admonition    # 新版警告框语法
+  - pymdownx.blocks.definition    # 新版定义列表语法
+  - pymdownx.blocks.details       # 新版详情语法
+  - pymdownx.blocks.html          # 新版 HTML 块语法
+  - pymdownx.blocks.tab           # 新版标签页语法
+
+# ==============================================================================
+# 额外配置
+# ==============================================================================
+extra:
+  # 多语言支持
+  alternate:
+    - name: 简体中文
+      link: /
+      lang: zh
+    - name: English
+      link: /en/
+      lang: en
+  
+  # 版本选择器
+  # version:
+  #   provider: mike
+  #   default: latest
+  
+  # 数据分析
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+    feedback:
+      title: 这篇文章有帮助吗？
+      ratings:
+        - icon: material/emoticon-happy-outline
+          name: 有帮助
+          data: 1
+          note: 感谢您的反馈！
+        - icon: material/emoticon-sad-outline
+          name: 需要改进
+          data: 0
+          note: 感谢您的反馈！我们会继续改进。
+  
+  # 网站状态
+  status:
+    new: 最近添加
+    deprecated: 已弃用
+  
+  # 社交链接
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/yourname
+      name: GitHub
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/yourname
+      name: Twitter
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/yourserver
+      name: Discord
+    - icon: fontawesome/solid/paper-plane
+      link: mailto:your@email.com
+      name: 邮箱
+  
+  # 生成器标识（是否显示 "Made with Material for MkDocs"）
+  generator: true
+  
+  # Cookie 同意
+  consent:
+    title: Cookie 使用同意
+    description: >-
+      我们使用 Cookie 来识别您的重复访问和偏好设置，以及衡量文档的有效性和用户是否找到了他们正在搜索的内容。
+      如果您同意，将帮助我们改进文档。
+    cookies:
+      analytics:
+        name: Google Analytics
+        checked: true
+      github:
+        name: GitHub
+        checked: true
+    actions:
+      - accept
+      - reject
+      - manage
+
+# ==============================================================================
+# 额外 CSS/JS
+# ==============================================================================
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js
+  # KaTeX 数学公式支持
+  - javascripts/katex.js
+  - https://unpkg.com/katex@0.16.9/dist/katex.min.js
+  - https://unpkg.com/katex@0.16.9/dist/contrib/auto-render.min.js
+
+# ==============================================================================
+# 监视文件变化
+# ==============================================================================
+watch:
+  - includes
+  - overrides
+
+# ==============================================================================
+# 验证配置
+# ==============================================================================
+validation:
+  nav:
+    omitted_files: info
+    not_found: warn
+    absolute_links: info
+  links:
+    not_found: warn
+    anchors: warn
+    absolute_links: info
+    unrecognized_links: info
+
+# ==============================================================================
+# 钩子
+# ==============================================================================
+# hooks:
+#   - hooks/on_page_markdown.py
