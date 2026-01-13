@@ -169,10 +169,10 @@ plugins:
         kwds:
           case: lower
       tags_slugify_separator: "-"
-      tags_compare: !!python/name:material.plugins.tags.plugin.casefold
-      tags_compare_reverse: false
-      tags_pages_compare: !!python/name:material.plugins.tags.plugin.page_title
-      tags_pages_compare_reverse: false
+      #tags_compare: !!python/name:material.plugins.tags.plugin.casefold
+      #tags_compare_reverse: false
+      #tags_pages_compare: !!python/name:material.plugins.tags.plugin.page_title
+      #tags_pages_compare_reverse: false
       tags_allowed:
         - 教程
         - 指南
